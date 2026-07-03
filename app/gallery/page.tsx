@@ -19,7 +19,6 @@ export default async function Page() {
         gallerySections.map(async (section) => {
           const images = await getImages(section.folder);
 
-          // Hide empty folders
           if (!images || images.length === 0) return null;
 
           return (
