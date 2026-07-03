@@ -1,8 +1,60 @@
-export default function Page() {
+export const dynamic = "force-dynamic";
+import Image from "next/image";
+import { gallerySections } from "./sections";
+
+async function getImages(folder: string) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/gallery/${folder}`);
+  const data = await res.json();
+  return data.images;
+}
+
+export default async function Page() {
   return (
     <main style={{ padding: "20px" }}>
-      <h1>Gallery Page</h1>
-      <p>This page is working now.</p>
+      {await Promise.all(
+        gallerySections.map(async (section) => {
+          const images = await getImages(section.folder);
+
+          // ⭐ Hide empty folders
+          if (images.length === 0) return null;
+
+          return (
+            <div key={section.folder} style={{ marginBottom: "40px" }}>
+              <h2
+                style={{
+                  fontSize: "28px",
+                  fontWeight: "600",
+                  marginBottom: "10px",
+                  marginTop: "40px",
+                  borderLeft: "6px solid #ff6600",
+                  paddingLeft: "12px",
+                }}
+              >
+                {section.title}
+              </h2>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                  gap: "15px",
+                }}
+              >
+                {images.map((src: string, i: number) => (
+                  <Image
+                    key={i}
+                    src={src}
+                    width={300}
+                    height={200}
+                    alt={section.title}
+                    style={{ borderRadius: "8px", objectFit: "cover" }}
+                  />
+                ))}
+              </div>
+            </div>
+          );
+        })
+      )}
     </main>
   );
 }
