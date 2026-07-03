@@ -1,10 +1,13 @@
-//export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic";
+
 import Image from "next/image";
 import { gallerySections } from "./sections";
 
 async function getImages(folder: string) {
-  ------///const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/gallery/${folder}`);///
-  const res = await fetch(`/api/gallery/${folder}`);
+  const res = await fetch(`/api/gallery/${folder}`, {
+    cache: "no-store",
+  });
+
   const data = await res.json();
   return data.images;
 }
@@ -16,8 +19,8 @@ export default async function Page() {
         gallerySections.map(async (section) => {
           const images = await getImages(section.folder);
 
-          // ⭐ Hide empty folders
-          if (images.length === 0) return null;
+          // Hide empty folders
+          if (!images || images.length === 0) return null;
 
           return (
             <div key={section.folder} style={{ marginBottom: "40px" }}>
@@ -49,6 +52,7 @@ export default async function Page() {
                     height={200}
                     alt={section.title}
                     style={{ borderRadius: "8px", objectFit: "cover" }}
+                    loading="lazy"
                   />
                 ))}
               </div>
