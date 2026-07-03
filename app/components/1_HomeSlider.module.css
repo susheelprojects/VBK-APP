@@ -1,0 +1,68 @@
+.sliderContainer {
+  width: 100%;
+  height: 80vh; /* TALLER SLIDER FIXES PORTRAIT IMAGES */
+  position: relative;
+  overflow: hidden;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sliderImage {
+  height: 100%;
+  width: auto;
+  object-fit: cover;
+  object-position: center;
+  animation: fade 1s ease-in-out;
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Arrows */
+.leftArrow,
+.rightArrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.4);
+  border: none;
+  font-size: 40px;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  color: #000;
+}
+
+.leftArrow { left: 20px; }
+.rightArrow { right: 20px; }
+
+.leftArrow:hover,
+.rightArrow:hover {
+  background: rgba(255,255,255,0.7);
+}
+
+/* Dots */
+.dots {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  background: rgba(255,255,255,0.5);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.activeDot {
+  background: #fff;
+}

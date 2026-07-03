@@ -1,0 +1,182 @@
+/* ===========================
+   GLOBAL HEADER CONTAINER
+   =========================== */
+.headerContainer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 20px;
+  background: #fff;
+
+  /* Sticky header */
+  position: sticky;
+  top: 0;
+  z-index: 999;
+
+  /* Remove the boxed look */
+  max-width: none;
+  margin: 0;
+
+  /* Optional: softer shadow */
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+
+/* ===========================
+   FADE-IN KEYFRAMES
+   =========================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===========================
+   IMAGE GROUPS
+   =========================== */
+.imageGroup {
+  display: flex;
+  gap: 12px;
+}
+
+.circleImg {
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+}
+
+/* ===========================
+   CENTER SECTION
+   =========================== */
+.centerSection {
+  text-align: center;
+  flex: 1;
+}
+
+.branding {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.logoImg {
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+}
+
+.brandName {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0;
+  color: #222;
+}
+
+.subtitle {
+  font-size: 15px;
+  font-weight: 500;
+  margin: 0;
+  color: #555;
+}
+
+/* ===========================
+   NAVIGATION MENU
+   =========================== */
+.navMenu {
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+}
+
+.navMenu a {
+  text-decoration: none;
+  font-size: 18px;
+  color: #333;
+  font-weight: 500;
+  transition: 0.3s ease;
+}
+
+.navMenu a:hover {
+  color: #000;
+}
+
+/* ===========================
+   TABLET RESPONSIVE
+   =========================== */
+@media (max-width: 1024px) {
+  .headerContainer {
+    max-width: 900px;
+    padding: 6px 16px;
+  }
+
+  .circleImg {
+    width: 70px;
+    height: 70px;
+  }
+
+  .logoImg {
+    width: 90px;
+    height: 90px;
+  }
+
+  .brandName {
+    font-size: 22px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .navMenu a {
+    font-size: 16px;
+  }
+}
+
+/* ===========================
+   MOBILE RESPONSIVE
+   =========================== */
+@media (max-width: 768px) {
+  .headerContainer {
+    flex-direction: column;
+    gap: 12px;
+    padding: 10px 12px;
+  }
+
+  .imageGroup {
+    order: 3;
+    gap: 8px;
+  }
+
+  .circleImg {
+    width: 55px;
+    height: 55px;
+  }
+
+  .logoImg {
+    width: 75px;
+    height: 75px;
+  }
+
+  .brandName {
+    font-size: 20px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
+
+  .navMenu {
+    order: 2;
+    gap: 16px;
+  }
+
+  .navMenu a {
+    font-size: 15px;
+  }
+}
