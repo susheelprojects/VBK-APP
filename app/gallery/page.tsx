@@ -1,7 +1,8 @@
-export default function Gallery() {
+export default function Page() {
   return (
-    <div>
+    <main style={{ padding: "20px" }}>
       <h1>Gallery Page</h1>
-    </div>
+      <p>This page is working now.</p>
+    </main>
   );
 }
