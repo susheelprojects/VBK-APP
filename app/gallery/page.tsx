@@ -4,7 +4,11 @@ import Image from "next/image";
 import { gallerySections } from "./sections";
 
 async function getImages(folder: string) {
-  const res = await fetch(`/api/gallery/${folder}`, {
+  const baseUrl = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "http://localhost:3000";
+
+  const res = await fetch(`${baseUrl}/api/gallery/${folder}`, {
     cache: "no-store",
   });
 
