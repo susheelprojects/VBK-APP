@@ -1,12 +1,9 @@
-export const dynamic = "force-dynamic";
-
 import Image from "next/image";
-import { gallerySections } from "./sections";
+import sections from "./sections";
 
 async function getImages(folder: string) {
-  const baseUrl = typeof window !== "undefined"
-    ? window.location.origin
-    : process.env.VERCEL_URL
+  // SERVER-SAFE base URL (no window)
+  const baseUrl = process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`
     : "http://localhost:3000";
 
@@ -15,56 +12,50 @@ async function getImages(folder: string) {
   });
 
   const data = await res.json();
-  return data.images;
+  return data.images || [];
 }
 
 export default async function Page() {
+  // Fetch all sections + images
+  const galleryData = await Promise.all(
+    sections.map(async (section) => {
+      const images = await getImages(section.folder);
+      return { ...section, images };
+    })
+  );
+
   return (
     <main style={{ padding: "20px" }}>
-      {await Promise.all(
-        gallerySections.map(async (section) => {
-          const images = await getImages(section.folder);
+      <h1>Gallery</h1>
 
-          if (!images || images.length === 0) return null;
+      {galleryData.map((section) => (
+        <div key={section.folder} style={{ marginBottom: "40px" }}>
+          <h2>{section.title}</h2>
 
-          return (
-            <div key={section.folder} style={{ marginBottom: "40px" }}>
-              <h2
-                style={{
-                  fontSize: "28px",
-                  fontWeight: "600",
-                  marginBottom: "10px",
-                  marginTop: "40px",
-                  borderLeft: "6px solid #ff6600",
-                  paddingLeft: "12px",
-                }}
-              >
-                {section.title}
-              </h2>
+          {section.images.length === 0 && (
+            <p>No images found for this section.</p>
+          )}
 
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-                  gap: "15px",
-                }}
-              >
-                {images.map((file: string, i: number) => (
-                  <Image
-                    key={i}
-                    src={`/gallery-images/${section.folder}/${file}`}
-                    width={300}
-                    height={200}
-                    alt={section.title}
-                    style={{ borderRadius: "8px", objectFit: "cover" }}
-                    loading="lazy"
-                  />
-                ))}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+              gap: "16px",
+            }}
+          >
+            {section.images.map((src) => (
+              <div key={src} style={{ position: "relative", width: "100%", height: "200px" }}>
+                <Image
+                  src={src}
+                  alt={section.title}
+                  fill
+                  style={{ objectFit: "cover", borderRadius: "8px" }}
+                />
               </div>
-            </div>
-          );
-        })
-      )}
+            ))}
+          </div>
+        </div>
+      ))}
     </main>
   );
 }
