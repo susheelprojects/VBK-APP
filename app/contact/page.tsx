@@ -36,7 +36,6 @@ export default function ContactPage() {
       const data = await res.json();
       setMessage(data.message || "Submitted successfully!");
 
-      // Reset form
       setForm({
         firstName: "",
         familyName: "",
@@ -54,15 +53,16 @@ export default function ContactPage() {
   }
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1>Contact Form</h1>
+    <div className="p-6 max-w-xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Contact Form</h1>
 
-      <form onSubmit={handleSubmit} style={{ maxWidth: "500px" }}>
+      <form onSubmit={handleSubmit} className="space-y-4">
         <input
           name="firstName"
           placeholder="First Name"
           value={form.firstName}
           onChange={handleChange}
+          className="w-full p-3 border border-gray-300 rounded-md"
         />
 
         <input
@@ -70,6 +70,7 @@ export default function ContactPage() {
           placeholder="Family Name"
           value={form.familyName}
           onChange={handleChange}
+          className="w-full p-3 border border-gray-300 rounded-md"
         />
 
         <input
@@ -77,6 +78,7 @@ export default function ContactPage() {
           placeholder="Address"
           value={form.address}
           onChange={handleChange}
+          className="w-full p-3 border border-gray-300 rounded-md"
         />
 
         <input
@@ -84,6 +86,7 @@ export default function ContactPage() {
           placeholder="Phone"
           value={form.phone}
           onChange={handleChange}
+          className="w-full p-3 border border-gray-300 rounded-md"
         />
 
         <input
@@ -91,6 +94,7 @@ export default function ContactPage() {
           placeholder="Colony"
           value={form.colony}
           onChange={handleChange}
+          className="w-full p-3 border border-gray-300 rounded-md"
         />
 
         <input
@@ -98,6 +102,7 @@ export default function ContactPage() {
           placeholder="Landmark"
           value={form.landmark}
           onChange={handleChange}
+          className="w-full p-3 border border-gray-300 rounded-md"
         />
 
         <textarea
@@ -105,6 +110,7 @@ export default function ContactPage() {
           placeholder="Issue"
           value={form.issue}
           onChange={handleChange}
+          className="w-full p-3 border border-gray-300 rounded-md h-24"
         />
 
         <input
@@ -112,6 +118,7 @@ export default function ContactPage() {
           placeholder="Division"
           value={form.division}
           onChange={handleChange}
+          className="w-full p-3 border border-gray-300 rounded-md"
         />
 
         <input
@@ -119,12 +126,18 @@ export default function ContactPage() {
           placeholder="Constituency"
           value={form.constituency}
           onChange={handleChange}
+          className="w-full p-3 border border-gray-300 rounded-md"
         />
 
-        <button type="submit">Submit</button>
+        <button
+          type="submit"
+          className="w-full bg-orange-500 text-white p-3 rounded-md font-semibold"
+        >
+          Submit
+        </button>
       </form>
 
-      {message && <p>{message}</p>}
+      {message && <p className="mt-4 text-green-600">{message}</p>}
     </div>
   );
 }
