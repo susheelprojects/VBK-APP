@@ -2,7 +2,7 @@ import Image from "next/image";
 import sections from "./sections";
 
 async function getImages(folder: string) {
-  // SERVER-SAFE base URL (no window)
+  // SERVER-SAFE base URL
   const baseUrl = process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`
     : "http://localhost:3000";
@@ -16,7 +16,6 @@ async function getImages(folder: string) {
 }
 
 export default async function Page() {
-  // Fetch all sections + images
   const galleryData = await Promise.all(
     sections.map(async (section) => {
       const images = await getImages(section.folder);
@@ -26,25 +25,43 @@ export default async function Page() {
 
   return (
     <main style={{ padding: "20px" }}>
-      <h1>Gallery</h1>
+      <h1 style={{ marginBottom: "30px" }}>Gallery</h1>
 
       {galleryData.map((section) => (
         <div key={section.folder} style={{ marginBottom: "40px" }}>
-          <h2>{section.title}</h2>
+          <h2
+            style={{
+              fontSize: "28px",
+              fontWeight: "600",
+              marginBottom: "10px",
+              marginTop: "40px",
+              borderLeft: "6px solid #ff6600",
+              paddingLeft: "12px",
+            }}
+          >
+            {section.title}
+          </h2>
 
           {section.images.length === 0 && (
-            <p>No images found for this section.</p>
+            <p style={{ opacity: 0.6 }}>No images found.</p>
           )}
 
           <div
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-              gap: "16px",
+              gap: "15px",
             }}
           >
             {section.images.map((src) => (
-              <div key={src} style={{ position: "relative", width: "100%", height: "200px" }}>
+              <div
+                key={src}
+                style={{
+                  position: "relative",
+                  width: "100%",
+                  height: "200px",
+                }}
+              >
                 <Image
                   src={src}
                   alt={section.title}
