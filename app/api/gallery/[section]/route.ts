@@ -4,12 +4,17 @@ import path from "path";
 
 export async function GET(
   req: Request,
-  context: { params: Promise<{ section: string }> }
+  context: { params: { folder: string } }
 ) {
   try {
-    const { section } = await context.params;
+    const { folder } = context.params;
 
-    const folderPath = path.join(process.cwd(), "public", "gallery-images", section);
+    const folderPath = path.join(
+      process.cwd(),
+      "public",
+      "gallery-images",
+      folder
+    );
 
     if (!fs.existsSync(folderPath)) {
       return NextResponse.json({ images: [], error: "Folder not found" });
@@ -17,7 +22,9 @@ export async function GET(
 
     const files = fs.readdirSync(folderPath);
 
-    const images = files.map((file) => `/gallery-images/${section}/${file}`);
+    const images = files.map(
+      (file) => `/gallery-images/${folder}/${file}`
+    );
 
     return NextResponse.json({ images });
   } catch (err) {
