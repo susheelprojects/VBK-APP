@@ -9,7 +9,7 @@ export async function GET(
   // ⭐ FIX: unwrap params (Next.js 14 requirement)
   const { section } = await context.params;
 
-  const folderPath = path.join(process.cwd(), "public", "gallery", section);
+  const folderPath = path.join(process.cwd(), "app", "gallery-images", section);
 
   if (!fs.existsSync(folderPath)) {
     return NextResponse.json({ images: [] });

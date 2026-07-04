@@ -1,4 +1,5 @@
 export const dynamic = "force-dynamic";
+
 import Image from "next/image";
 import { gallerySections } from "./sections";
 
@@ -46,10 +47,10 @@ export default async function Page() {
                   gap: "15px",
                 }}
               >
-                {images.map((src: string, i: number) => (
+                {images.map((file: string, i: number) => (
                   <Image
                     key={i}
-                    src={src}
+                    src={`/gallery-images/${section.folder}/${file}`}
                     width={300}
                     height={200}
                     alt={section.title}
