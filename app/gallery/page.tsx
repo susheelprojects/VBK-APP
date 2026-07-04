@@ -2,11 +2,9 @@ import Image from "next/image";
 import sections from "./sections";
 
 async function getImages(folder: string): Promise<string[]> {
-  const baseUrl = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : "http://localhost:3000";
+  const baseUrl = "https://vbk-app.vercel.app";
 
-  const res = await fetch(`${baseUrl}/api/gallery/${folder}`, {
+  const res = await fetch(`https://vbk-app.vercel.app/api/gallery/${folder}`, {
     cache: "no-store",
   });
 
