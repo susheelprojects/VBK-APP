@@ -1,37 +1,34 @@
 import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
-import XLSX from "xlsx";
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const filePath = path.join(process.cwd(), "data", "contact-submissions.xlsx");
+    const filePath = path.join(process.cwd(), "data", "contact-submissions.csv");
 
-    let workbook;
-    let worksheet;
+    const row = [
+      new Date().toISOString(),
+      body.firstName,
+      body.familyName,
+      body.address,
+      body.phone,
+      body.colony,
+      body.landmark,
+      body.issue,
+      body.division,
+      body.constituency,
+    ].map((v) => `"${String(v).replace(/"/g, '""')}"`).join(",");
 
-    if (fs.existsSync(filePath)) {
-      workbook = XLSX.readFile(filePath);
-      worksheet = workbook.Sheets["Submissions"];
+    if (!fs.existsSync(filePath)) {
+      fs.writeFileSync(
+        filePath,
+        `Timestamp,First Name,Family Name,Address,Phone,Colony,Landmark,Issue,Division,Constituency\n${row}\n`
+      );
     } else {
-      workbook = XLSX.utils.book_new();
-      worksheet = XLSX.utils.json_to_sheet([]);
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Submissions");
+      fs.appendFileSync(filePath, `${row}\n`);
     }
-
-    const existingData = XLSX.utils.sheet_to_json(worksheet);
-
-    existingData.push({
-      Timestamp: new Date().toISOString(),
-      ...body,
-    });
-
-    const newSheet = XLSX.utils.json_to_sheet(existingData);
-    workbook.Sheets["Submissions"] = newSheet;
-
-    XLSX.writeFile(workbook, filePath);
 
     return NextResponse.json({ message: "Submitted successfully!" });
   } catch (err) {
