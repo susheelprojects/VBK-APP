@@ -4,26 +4,29 @@ import path from "path";
 
 export async function GET(
   req: Request,
-  context: { params: { folder: string } }
+  context: { params: { section: string } }
 ) {
   try {
-    const { folder } = context.params;
+    const { section } = context.params;
 
     const folderPath = path.join(
       process.cwd(),
       "public",
       "gallery-images",
-      folder
+      section
     );
 
     if (!fs.existsSync(folderPath)) {
-      return NextResponse.json({ images: [], error: "Folder not found" });
+      return NextResponse.json({
+        images: [],
+        error: `Folder not found: ${section}`,
+      });
     }
 
     const files = fs.readdirSync(folderPath);
 
     const images = files.map(
-      (file) => `/gallery-images/${folder}/${file}`
+      (file) => `/gallery-images/${section}/${file}`
     );
 
     return NextResponse.json({ images });
