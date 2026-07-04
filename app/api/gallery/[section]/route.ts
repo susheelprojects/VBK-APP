@@ -4,10 +4,11 @@ import path from "path";
 
 export async function GET(
   req: Request,
-  context: { params: { section: string } }
+  context: { params: Promise<{ section: string }> }
 ) {
   try {
-    const { section } = context.params;
+    // Next.js 14 passes params as a Promise → MUST await
+    const { section } = await context.params;
 
     const folderPath = path.join(
       process.cwd(),
