@@ -1,17 +1,52 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 export default function GalleryClient({ galleryData }: { galleryData: any[] }) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [currentSectionImages, setCurrentSectionImages] = useState<string[]>([]);
+
+  // Handle keyboard navigation
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (!selectedImage) return;
+
+      if (e.key === "Escape") setSelectedImage(null);
+      if (e.key === "ArrowRight") goNext();
+      if (e.key === "ArrowLeft") goPrev();
+    }
+
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [selectedImage, currentIndex, currentSectionImages]);
+
+  function openModal(images: string[], index: number) {
+    setCurrentSectionImages(images);
+    setCurrentIndex(index);
+    setSelectedImage(images[index]);
+  }
+
+  function goNext() {
+    const nextIndex = (currentIndex + 1) % currentSectionImages.length;
+    setCurrentIndex(nextIndex);
+    setSelectedImage(currentSectionImages[nextIndex]);
+  }
+
+  function goPrev() {
+    const prevIndex =
+      (currentIndex - 1 + currentSectionImages.length) %
+      currentSectionImages.length;
+    setCurrentIndex(prevIndex);
+    setSelectedImage(currentSectionImages[prevIndex]);
+  }
 
   return (
     <main style={{ padding: "20px" }}>
       {/* Fullscreen Modal */}
       {selectedImage && (
         <div
-          onClick={() => setSelectedImage(null)}
           style={{
             position: "fixed",
             top: 0,
@@ -23,9 +58,40 @@ export default function GalleryClient({ galleryData }: { galleryData: any[] }) {
             justifyContent: "center",
             alignItems: "center",
             zIndex: 9999,
-            cursor: "zoom-out",
           }}
         >
+          {/* Close Button (X) */}
+          <div
+            onClick={() => setSelectedImage(null)}
+            style={{
+              position: "absolute",
+              top: "20px",
+              right: "30px",
+              fontSize: "40px",
+              color: "white",
+              cursor: "pointer",
+              fontWeight: "bold",
+            }}
+          >
+            ×
+          </div>
+
+          {/* Left Arrow */}
+          <div
+            onClick={goPrev}
+            style={{
+              position: "absolute",
+              left: "30px",
+              fontSize: "50px",
+              color: "white",
+              cursor: "pointer",
+              userSelect: "none",
+            }}
+          >
+            ‹
+          </div>
+
+          {/* Image */}
           <img
             src={selectedImage}
             style={{
@@ -35,6 +101,21 @@ export default function GalleryClient({ galleryData }: { galleryData: any[] }) {
               boxShadow: "0 0 20px rgba(255,255,255,0.3)",
             }}
           />
+
+          {/* Right Arrow */}
+          <div
+            onClick={goNext}
+            style={{
+              position: "absolute",
+              right: "30px",
+              fontSize: "50px",
+              color: "white",
+              cursor: "pointer",
+              userSelect: "none",
+            }}
+          >
+            ›
+          </div>
         </div>
       )}
 
@@ -61,7 +142,7 @@ export default function GalleryClient({ galleryData }: { galleryData: any[] }) {
               gap: "15px",
             }}
           >
-            {section.images.map((src: string) => (
+            {section.images.map((src: string, index: number) => (
               <div
                 key={src}
                 style={{
@@ -70,7 +151,7 @@ export default function GalleryClient({ galleryData }: { galleryData: any[] }) {
                   height: "200px",
                   cursor: "zoom-in",
                 }}
-                onClick={() => setSelectedImage(src)}
+                onClick={() => openModal(section.images, index)}
               >
                 <Image
                   src={src}
