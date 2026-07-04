@@ -9,7 +9,7 @@ export async function GET(
   try {
     const { section } = await context.params;
 
-    const folderPath = path.join(process.cwd(), "app", "gallery-images", section);
+    const folderPath = path.join(process.cwd(), "public", "gallery-images", section);
 
     if (!fs.existsSync(folderPath)) {
       return NextResponse.json({ images: [], error: "Folder not found" });
