@@ -1,8 +1,7 @@
 import Image from "next/image";
-import sections from "./sections";
+import { gallerySections } from "./sections";
 
-async function getImages(folder: string) {
-  // SERVER-SAFE base URL
+async function getImages(folder: string): Promise<string[]> {
   const baseUrl = process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`
     : "http://localhost:3000";
@@ -11,13 +10,19 @@ async function getImages(folder: string) {
     cache: "no-store",
   });
 
+  // If folder doesn't exist → API returns HTML → avoid JSON.parse crash
+  const contentType = res.headers.get("content-type") || "";
+  if (!contentType.includes("application/json")) {
+    return []; // return empty instead of crashing
+  }
+
   const data = await res.json();
-  return data.images || [];
+  return (data.images as string[]) || [];
 }
 
 export default async function Page() {
   const galleryData = await Promise.all(
-    sections.map(async (section) => {
+    gallerySections.map(async (section) => {
       const images = await getImages(section.folder);
       return { ...section, images };
     })
@@ -43,7 +48,9 @@ export default async function Page() {
           </h2>
 
           {section.images.length === 0 && (
-            <p style={{ opacity: 0.6 }}>No images found.</p>
+            <p style={{ opacity: 0.6 }}>
+              No images found for this section.
+            </p>
           )}
 
           <div
@@ -53,7 +60,7 @@ export default async function Page() {
               gap: "15px",
             }}
           >
-            {section.images.map((src) => (
+            {section.images.map((src: string) => (
               <div
                 key={src}
                 style={{
